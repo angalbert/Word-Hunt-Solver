@@ -3,7 +3,7 @@ from collections import defaultdict
 # Free-to-play grid dimensions
 grid_size = 4
 board = [[''] * grid_size] * grid_size
-output = []
+ans = []
 
 # Traversing through every single combination of letters is inefficient, especially if some traversals lead to dead ends anyways. 
 # Therefore, we can implement a trie to check if the current node in the trie has any children. If not, there are no more possible words, so we continue our search on another node. 
@@ -42,7 +42,7 @@ def dfs(r, c, word, visited, node):
     visited[r][c] = True
 
     if len(word) >= 3 and node.children[letter].full_word:
-        output.append(word)
+        ans.append(word)
 
     directions = [
                 (-1, 0), (-1, 1), 
@@ -92,7 +92,13 @@ def main():
         for j in range(grid_size):
             dfs(i, j, "", visited, root)
     
-    output.sort(key=lambda x: calculate_points(len(x)), reverse=True)
+    ans.sort(key=lambda x: calculate_points(len(x)), reverse=True)
+
+    output = []
+    for word in ans:
+        if word not in output:
+            output.append(word)
+    
     print(f"Words Generated: {len(output)}")
     print(f"Highest Possible Score: {sum(calculate_points(len(word)) for word in output)}")
 
